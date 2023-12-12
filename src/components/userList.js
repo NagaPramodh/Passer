@@ -82,7 +82,7 @@ const UserList = ({ propCurrentItems }) => {
           fontWeight: "bolder",
         }}
       >
-        User Information
+        Passer Digital
       </Row>
 
       <hr />
