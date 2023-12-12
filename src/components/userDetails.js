@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-
+import "../App.css";
 const UserDetails = () => {
   const { id } = useParams(); // Retrieve the user ID from URL params
   const user = useSelector((state) =>
@@ -10,15 +10,17 @@ const UserDetails = () => {
 
   return (
     <div>
-      <h1>User Details</h1>
-      {user && (
-        <div>
-          <p>ID: {user.id}</p>
-          <p>Name: {user.value}</p>
-          <p>Email: {user.email}</p>
-          <p>Role: {user.role}</p>
+      <div class="card user-details-card">
+        <div class="card-header">User Details</div>
+        <div class="card-body">
+          <blockquote class="blockquote mb-0">
+            <p>User Id: {user.id}</p>
+            <p>Name: {user.value}</p>
+            <p>Email: {user.email}</p>
+            <p>Role: {user.role}</p>
+          </blockquote>
         </div>
-      )}
+      </div>
     </div>
   );
 };
