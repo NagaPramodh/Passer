@@ -14,11 +14,13 @@ import { useDispatch } from "react-redux";
 import { addUser, deleteUser, updateUser } from "../redux/userSlice";
 import { userData } from "../data/userData";
 import Items from "../components/items";
-
+import validateEmail from "../components/email";
 import "../App.css";
+
 const UserList = ({ propCurrentItems }) => {
   const [userInput, setUserInput] = useState("");
   const [userEmail, setUserEmail] = useState("");
+  const [isValidEmail, setIsValidEmail] = useState(true);
   const [userRole, setUserRole] = useState("");
   const [list, setList] = useState(userData);
   const [addModal, showAddModal] = useState(false);
@@ -52,6 +54,12 @@ const UserList = ({ propCurrentItems }) => {
 
   const handleAdd = () => {
     showAddModal(true);
+  };
+
+  const handleEmailChange = (e) => {
+    const email = e.target.value;
+    setUserEmail(email);
+    setIsValidEmail(validateEmail(email)); // Check if the entered email is valid
   };
 
   const handleEdit = (index) => {
@@ -116,7 +124,7 @@ const UserList = ({ propCurrentItems }) => {
                     placeholder="add Email . . . "
                     size="lg"
                     value={userEmail}
-                    onChange={(e) => setUserEmail(e.target.value)}
+                    onChange={handleEmailChange}
                     aria-label="add something"
                     aria-describedby="basic-addon2"
                   />
@@ -129,10 +137,24 @@ const UserList = ({ propCurrentItems }) => {
                     aria-describedby="basic-addon2"
                   />
                 </div>
+                {!isValidEmail && (
+                  <p style={{ color: "red" }}>
+                    Please enter a valid email address
+                  </p>
+                )}
               </InputGroup>
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="secondary" onClick={() => showAddModal(false)}>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  showAddModal(false);
+                  setUserEmail("");
+                  setUserInput("");
+                  setUserRole("");
+                  setIsValidEmail(true);
+                }}
+              >
                 Cancel
               </Button>
               <Button variant="primary" onClick={addItem}>
@@ -167,7 +189,7 @@ const UserList = ({ propCurrentItems }) => {
           <FormControl
             placeholder="Edit User Email"
             value={userEmail}
-            onChange={(e) => setUserEmail(e.target.value)}
+            onChange={handleEmailChange}
           />
           <FormControl
             placeholder="Edit User Role"
@@ -176,7 +198,16 @@ const UserList = ({ propCurrentItems }) => {
           />
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setShowModal(false);
+              setUserEmail("");
+              setUserInput("");
+              setUserRole("");
+              setIsValidEmail(true);
+            }}
+          >
             Cancel
           </Button>
           <Button variant="primary" onClick={() => handleSave()}>

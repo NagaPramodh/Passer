@@ -12,7 +12,12 @@ export const userData = [
     email: "abhitha@gmail.com",
     role: "Associate Software Developer",
   },
-  { id: 2, value: "Pramodh", email: "xyz@gmail.com", role: "developer" },
+  {
+    id: 2,
+    value: "Joshna Mariam",
+    email: "josna@gmail.com",
+    role: "developer",
+  },
   {
     id: 0.3477,
     value: "Divya Sundari",
