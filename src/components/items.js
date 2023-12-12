@@ -1,6 +1,6 @@
 import React from "react";
 import { ListGroup, Button } from "react-bootstrap";
-
+import { Link } from "react-router-dom";
 function Items({ currentItems, onDelete, onEdit }) {
   return (
     <div className="items">
@@ -8,7 +8,7 @@ function Items({ currentItems, onDelete, onEdit }) {
         {currentItems &&
           currentItems.map((item, index) => (
             <ListGroup.Item key={item.id} variant="dark" action>
-              {item.value} || {item.role} || {item.email}
+              <Link to={`/user/${item.id}`}>{item.value}</Link>
               <span>
                 <Button
                   style={{ marginRight: "10px" }}
