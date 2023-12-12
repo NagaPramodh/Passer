@@ -78,6 +78,9 @@ const UserList = ({ propCurrentItems }) => {
       role: userRole || propCurrentItems[editedIndex].role,
     };
     dispatch(updateUser(updatedItem));
+    setUserInput("");
+    setUserEmail("");
+    setUserRole("");
     setShowModal(false);
   };
 
@@ -92,7 +95,7 @@ const UserList = ({ propCurrentItems }) => {
           fontWeight: "bolder",
         }}
       >
-        Passer Digital
+        Passer Digital Users
       </Row>
 
       <hr />
@@ -196,6 +199,9 @@ const UserList = ({ propCurrentItems }) => {
             value={userRole}
             onChange={(e) => setUserRole(e.target.value)}
           />
+          {!isValidEmail && (
+            <p style={{ color: "red" }}>Please enter a valid email address</p>
+          )}
         </Modal.Body>
         <Modal.Footer>
           <Button
