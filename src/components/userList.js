@@ -23,7 +23,6 @@ const UserList = ({ propCurrentItems }) => {
   const [showModal, setShowModal] = useState(false);
   const [editedIndex, setEditedIndex] = useState(null);
   const dispatch = useDispatch();
-  const userList = useSelector((state) => state.users.list);
   const updateInput = (value) => {
     setUserInput(value);
   };
