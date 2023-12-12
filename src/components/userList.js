@@ -10,42 +10,20 @@ import {
   ListGroup,
   Modal,
 } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { addUser, deleteUser, updateUser } from "../redux/userSlice";
 import { userData } from "../data/userData";
-import { Items } from "../App";
-const UserList = ({ propCurrentData }) => {
+import Items from "../components/items";
+const UserList = ({ propCurrentItems }) => {
   const [userInput, setUserInput] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [userRole, setUserRole] = useState("");
-  const [list, setList] = useState(propCurrentData);
+  const [list, setList] = useState(userData);
   const [addModal, showAddModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [editedIndex, setEditedIndex] = useState(null);
-
-  function Items({ currentItems, onDelete, onEdit }) {
-    console.log(currentItems, "currentItems");
-    return (
-      <div className="items">
-        {currentItems &&
-          currentItems.map((item, index) => (
-            <ListGroup.Item key={item.id} variant="dark" action>
-              {item.value} || {item.role} || {item.email}
-              <span>
-                <Button
-                  style={{ marginRight: "10px" }}
-                  variant="light"
-                  onClick={() => onDelete(item.id)}
-                >
-                  Delete
-                </Button>
-                <Button variant="light" onClick={() => onEdit(index)}>
-                  Edit
-                </Button>
-              </span>
-            </ListGroup.Item>
-          ))}
-      </div>
-    );
-  }
+  const dispatch = useDispatch();
+  const userList = useSelector((state) => state.users.list);
   const updateInput = (value) => {
     setUserInput(value);
   };
@@ -58,6 +36,7 @@ const UserList = ({ propCurrentData }) => {
         email: userEmail,
         role: userRole,
       };
+      dispatch(addUser(newItem));
       setList([...list, newItem]);
       setUserInput("");
       setUserEmail("");
@@ -67,7 +46,7 @@ const UserList = ({ propCurrentData }) => {
   };
 
   const deleteItem = (key) => {
-    console.log(key, "key");
+    dispatch(deleteUser(key));
     const updatedList = list.filter((item) => item.id !== key);
     setList(updatedList);
   };
@@ -96,6 +75,13 @@ const UserList = ({ propCurrentData }) => {
       }
       return item;
     });
+    const updatedItem = {
+      id: list[editedIndex].id,
+      value: userInput || list[editedIndex].value,
+      email: userEmail || list[editedIndex].email,
+      role: userRole || list[editedIndex].role,
+    };
+    dispatch(updateUser(updatedItem));
     setList(updatedList);
     setShowModal(false);
   };
@@ -116,7 +102,6 @@ const UserList = ({ propCurrentData }) => {
 
       <hr />
       <Row>
-        {/* <Col md={{ span: 5, offset: 4 }}> */}
         <Col>
           <Button variant="dark" className="mt-2 mb-2" onClick={handleAdd}>
             Add User
@@ -167,39 +152,10 @@ const UserList = ({ propCurrentData }) => {
         </Col>
       </Row>
       <Row>
-        {/* <Col md={{ span: 5, offset: 4 }}> */}
         <Col>
           <ListGroup>
-            {/* {userData.map((item, index) => (
-              <div key={index}>
-                <ListGroup.Item
-                  variant="dark"
-                  action
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    fontSize: 24,
-                  }}
-                >
-                  {item.value}|| {item.role}|| {item.email}
-                  <span>
-                    <Button
-                      style={{ marginRight: "10px" }}
-                      variant="light"
-                      onClick={() => deleteItem(item.id)}
-                    >
-                      Delete
-                    </Button>
-                    <Button variant="light" onClick={() => handleEdit(index)}>
-                      Edit
-                    </Button>
-                  </span>
-                </ListGroup.Item>
-              </div>
-            ))} */}
-
             <Items
-              currentItems={propCurrentData}
+              currentItems={propCurrentItems}
               onDelete={(id) => deleteItem(id)}
               onEdit={(index) => handleEdit(index)}
             />
@@ -211,19 +167,6 @@ const UserList = ({ propCurrentData }) => {
           <Modal.Title>Edit User</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {/* <FormControl
-            placeholder="Edit User Name"
-            value={list[editedIndex]?.value}
-            onChange={(e) => {
-              const editedTodo = e.target.value;
-              setUserEmail(editedTodo);
-              setList((prevList) =>
-                prevList.map((item, index) =>
-                  index === editedIndex ? { ...item, value: editedTodo } : item
-                )
-              );
-            }}
-          /> */}
           <FormControl
             placeholder="Edit User Name"
             value={editedIndex !== null && list[editedIndex]?.value}
@@ -240,7 +183,6 @@ const UserList = ({ propCurrentData }) => {
 
           <FormControl
             placeholder="Edit User Email"
-            // value={list[editedIndex]?.email}
             value={editedIndex !== null && list[editedIndex]?.email}
             onChange={(e) => {
               const editedTodo = e.target.value;
@@ -254,7 +196,6 @@ const UserList = ({ propCurrentData }) => {
           />
           <FormControl
             placeholder="Edit User Role"
-            // value={list[editedIndex]?.role}
             value={editedIndex !== null && list[editedIndex]?.role}
             onChange={(e) => {
               const editedTodo = e.target.value;

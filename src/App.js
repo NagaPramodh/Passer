@@ -1,54 +1,25 @@
 import ReactPaginate from "react-paginate";
 import React, { useEffect, useState } from "react";
-import { userData } from "./data/userData";
-import { ListGroup, Button } from "react-bootstrap";
 import UserList from "./components/userList";
+import { Provider } from "react-redux";
+import store from "./redux/store";
+import { useSelector } from "react-redux";
 
-const items = userData;
-
-// export function Items({ currentItems, onDelete, onEdit }) {
-//   console.log(currentItems, "currentItems");
-//   return (
-//     <div className="items">
-//       {currentItems &&
-//         currentItems.map((item, index) => (
-//           <ListGroup.Item key={item.id} variant="dark" action>
-//             {item.value} || {item.role} || {item.email}
-//             <span>
-//               <Button
-//                 style={{ marginRight: "10px" }}
-//                 variant="light"
-//                 onClick={() => onDelete(item.id)}
-//               >
-//                 Delete
-//               </Button>
-//               <Button variant="light" onClick={() => onEdit(index)}>
-//                 Edit
-//               </Button>
-//             </span>
-//           </ListGroup.Item>
-//         ))}
-//     </div>
-//   );
-// }
-let itemsPerPage = 2;
-function PaginatedItems() {
-  const [currentItems, setCurrentItems] = useState(null);
+function PaginatedItems({ itemsPerPage }) {
+  const [currentItems, setCurrentItems] = useState([]);
   const [pageCount, setPageCount] = useState(0);
 
   const [itemOffset, setItemOffset] = useState(0);
-
+  const usersList = useSelector((state) => state.users.list);
   useEffect(() => {
     const endOffset = itemOffset + itemsPerPage;
+    setCurrentItems(usersList.slice(itemOffset, endOffset));
 
-    setCurrentItems(items.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(usersList.length / itemsPerPage));
+  }, [itemOffset, itemsPerPage, usersList]);
 
-    setPageCount(Math.ceil(items.length / itemsPerPage));
-  }, [itemOffset, itemsPerPage]);
-
-  // Invoke when user click to request another page.
   const handlePageClick = (event) => {
-    const newOffset = (event.selected * itemsPerPage) % items.length;
+    const newOffset = (event.selected * itemsPerPage) % usersList.length;
     console.log(
       `User requested page number ${event.selected}, which is offset ${newOffset}`
     );
@@ -57,7 +28,7 @@ function PaginatedItems() {
 
   return (
     <>
-      <UserList propCurrentData={currentItems} />
+      <UserList propCurrentItems={currentItems} />
       <ReactPaginate
         nextLabel="next >"
         onPageChange={handlePageClick}
@@ -83,6 +54,10 @@ function PaginatedItems() {
 }
 
 const App = () => {
-  return <PaginatedItems />;
+  return (
+    <Provider store={store}>
+      <PaginatedItems itemsPerPage={1} />
+    </Provider>
+  );
 };
 export default App;
