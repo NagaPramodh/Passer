@@ -12,7 +12,6 @@ function PaginatedItems({ itemsPerPage }) {
   useEffect(() => {
     const endOffset = itemOffset + itemsPerPage;
     setCurrentItems(usersList.slice(itemOffset, endOffset));
-    console.log(usersList, endOffset, "hey");
     setPageCount(Math.ceil(usersList.length / itemsPerPage));
   }, [itemOffset, itemsPerPage, usersList]);
 

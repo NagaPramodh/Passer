@@ -46,8 +46,6 @@ const UserList = ({ propCurrentItems }) => {
 
   const deleteItem = (key) => {
     dispatch(deleteUser(key));
-    const updatedList = list.filter((item) => item.id !== key);
-    setList(updatedList);
   };
 
   const handleAdd = () => {
@@ -56,32 +54,20 @@ const UserList = ({ propCurrentItems }) => {
 
   const handleEdit = (index) => {
     setEditedIndex(index);
-    setUserInput(list[index].value);
-    setUserEmail(list[index].email);
-    setUserRole(list[index].role);
+    setUserInput(propCurrentItems[index].value);
+    setUserEmail(propCurrentItems[index].email);
+    setUserRole(propCurrentItems[index].role);
     setShowModal(true);
   };
 
   const handleSave = () => {
-    const updatedList = list.map((item, index) => {
-      if (index === editedIndex) {
-        return {
-          ...item,
-          value: userInput || item.value,
-          email: userEmail || item.email,
-          role: userRole || item.role,
-        };
-      }
-      return item;
-    });
     const updatedItem = {
-      id: list[editedIndex].id,
-      value: userInput || list[editedIndex].value,
-      email: userEmail || list[editedIndex].email,
-      role: userRole || list[editedIndex].role,
+      id: propCurrentItems[editedIndex].id,
+      value: userInput || propCurrentItems[editedIndex].value,
+      email: userEmail || propCurrentItems[editedIndex].email,
+      role: userRole || propCurrentItems[editedIndex].role,
     };
     dispatch(updateUser(updatedItem));
-    setList(updatedList);
     setShowModal(false);
   };
 
@@ -168,43 +154,19 @@ const UserList = ({ propCurrentItems }) => {
         <Modal.Body>
           <FormControl
             placeholder="Edit User Name"
-            value={editedIndex !== null && list[editedIndex]?.value}
-            onChange={(e) => {
-              const editedTodo = e.target.value;
-              setUserInput(editedTodo);
-              setList((prevList) =>
-                prevList.map((item, index) =>
-                  index === editedIndex ? { ...item, value: editedTodo } : item
-                )
-              );
-            }}
+            value={userInput}
+            onChange={(e) => setUserInput(e.target.value)}
           />
 
           <FormControl
             placeholder="Edit User Email"
-            value={editedIndex !== null && list[editedIndex]?.email}
-            onChange={(e) => {
-              const editedTodo = e.target.value;
-              setUserEmail(editedTodo);
-              setList((prevList) =>
-                prevList.map((item, index) =>
-                  index === editedIndex ? { ...item, email: editedTodo } : item
-                )
-              );
-            }}
+            value={userEmail}
+            onChange={(e) => setUserEmail(e.target.value)}
           />
           <FormControl
             placeholder="Edit User Role"
-            value={editedIndex !== null && list[editedIndex]?.role}
-            onChange={(e) => {
-              const editedTodo = e.target.value;
-              setUserRole(userRole);
-              setList((prevList) =>
-                prevList.map((item, index) =>
-                  index === editedIndex ? { ...item, role: editedTodo } : item
-                )
-              );
-            }}
+            value={userRole}
+            onChange={(e) => setUserRole(e.target.value)}
           />
         </Modal.Body>
         <Modal.Footer>
