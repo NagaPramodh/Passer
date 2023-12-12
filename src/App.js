@@ -1,181 +1,88 @@
-import React, { useState } from "react";
-import "bootstrap/dist/css/bootstrap.css";
-import {
-  Container,
-  Row,
-  Col,
-  Button,
-  InputGroup,
-  FormControl,
-  ListGroup,
-  Modal,
-} from "react-bootstrap";
+import ReactPaginate from "react-paginate";
+import React, { useEffect, useState } from "react";
+import { userData } from "./data/userData";
+import { ListGroup, Button } from "react-bootstrap";
+import UserList from "./components/userList";
 
-const App = () => {
-  const [userInput, setUserInput] = useState("");
-  const [userEmail, setUserEmail] = useState("");
-  const [userRole, setUserRole] = useState("");
-  const [list, setList] = useState([{ id: 1, value: "task5" }]);
-  const [addModal, showAddModal] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [editedIndex, setEditedIndex] = useState(null);
+const items = userData;
 
-  const updateInput = (value) => {
-    setUserInput(value);
-  };
+// export function Items({ currentItems, onDelete, onEdit }) {
+//   console.log(currentItems, "currentItems");
+//   return (
+//     <div className="items">
+//       {currentItems &&
+//         currentItems.map((item, index) => (
+//           <ListGroup.Item key={item.id} variant="dark" action>
+//             {item.value} || {item.role} || {item.email}
+//             <span>
+//               <Button
+//                 style={{ marginRight: "10px" }}
+//                 variant="light"
+//                 onClick={() => onDelete(item.id)}
+//               >
+//                 Delete
+//               </Button>
+//               <Button variant="light" onClick={() => onEdit(index)}>
+//                 Edit
+//               </Button>
+//             </span>
+//           </ListGroup.Item>
+//         ))}
+//     </div>
+//   );
+// }
+let itemsPerPage = 2;
+function PaginatedItems() {
+  const [currentItems, setCurrentItems] = useState(null);
+  const [pageCount, setPageCount] = useState(0);
 
-  const addItem = () => {
-    if (userInput !== "") {
-      const newItem = {
-        id: Math.random(),
-        value: userInput,
-        email: userEmail,
-        role: userRole,
-      };
-      console.log(newItem, "newItem");
-      setList([...list, newItem]);
-      setUserInput("");
-      setUserEmail("");
-      setUserRole("");
-    }
-  };
+  const [itemOffset, setItemOffset] = useState(0);
 
-  const deleteItem = (key) => {
-    const updatedList = list.filter((item) => item.id !== key);
-    setList(updatedList);
-  };
+  useEffect(() => {
+    const endOffset = itemOffset + itemsPerPage;
 
-  const handleEdit = (index) => {
-    setEditedIndex(index);
-    setShowModal(true);
-  };
+    setCurrentItems(items.slice(itemOffset, endOffset));
 
-  const handleSave = (editedTodo) => {
-    if (editedTodo.trim() !== "") {
-      const updatedTodos = [...list];
-      updatedTodos[editedIndex].value = editedTodo;
-      setList(updatedTodos);
-    }
-    setShowModal(false);
+    setPageCount(Math.ceil(items.length / itemsPerPage));
+  }, [itemOffset, itemsPerPage]);
+
+  // Invoke when user click to request another page.
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * itemsPerPage) % items.length;
+    console.log(
+      `User requested page number ${event.selected}, which is offset ${newOffset}`
+    );
+    setItemOffset(newOffset);
   };
 
   return (
-    <Container>
-      <Row
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          fontSize: "3rem",
-          fontWeight: "bolder",
-        }}
-      >
-        User Information
-      </Row>
-
-      <hr />
-      <Row>
-        <Col md={{ span: 5, offset: 4 }}>
-          <InputGroup className="mb-2">
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <FormControl
-                placeholder="add item . . . "
-                size="lg"
-                value={userInput}
-                onChange={(e) => updateInput(e.target.value)}
-                aria-label="add something"
-                aria-describedby="basic-addon2"
-              />
-              <FormControl
-                placeholder="add Email . . . "
-                size="lg"
-                value={userEmail}
-                onChange={(e) => setUserEmail(e.target.value)}
-                aria-label="add something"
-                aria-describedby="basic-addon2"
-              />
-              <FormControl
-                placeholder="add Role . . . "
-                size="lg"
-                value={userRole}
-                onChange={(e) => setUserRole(e.target.value)}
-                aria-label="add something"
-                aria-describedby="basic-addon2"
-              />
-            </div>
-            <InputGroup>
-              <Button variant="dark" className="mt-2" onClick={addItem}>
-                ADD User
-              </Button>
-            </InputGroup>
-          </InputGroup>
-        </Col>
-      </Row>
-      <Row>
-        {/* <Col md={{ span: 5, offset: 4 }}> */}
-        <Col>
-          <ListGroup>
-            {list.map((item, index) => (
-              <div key={index}>
-                <ListGroup.Item
-                  variant="dark"
-                  action
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  {item.value}
-                  <span>
-                    <Button
-                      style={{ marginRight: "10px" }}
-                      variant="light"
-                      onClick={() => deleteItem(item.id)}
-                    >
-                      Delete
-                    </Button>
-                    <Button variant="light" onClick={() => handleEdit(index)}>
-                      Edit
-                    </Button>
-                  </span>
-                </ListGroup.Item>
-              </div>
-            ))}
-          </ListGroup>
-        </Col>
-      </Row>
-      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Edit User</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <FormControl
-            placeholder="Edit item"
-            value={list[editedIndex]?.value}
-            onChange={(e) => {
-              const editedTodo = e.target.value;
-              setList((prevList) =>
-                prevList.map((item, index) =>
-                  index === editedIndex ? { ...item, value: editedTodo } : item
-                )
-              );
-            }}
-          />
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Cancel
-          </Button>
-          <Button
-            variant="primary"
-            onClick={() => handleSave(list[editedIndex]?.value)}
-          >
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </Container>
+    <>
+      <UserList propCurrentData={currentItems} />
+      <ReactPaginate
+        nextLabel="next >"
+        onPageChange={handlePageClick}
+        pageRangeDisplayed={3}
+        marginPagesDisplayed={2}
+        pageCount={pageCount}
+        previousLabel="< previous"
+        pageClassName="page-item"
+        pageLinkClassName="page-link"
+        previousClassName="page-item"
+        previousLinkClassName="page-link"
+        nextClassName="page-item"
+        nextLinkClassName="page-link"
+        breakLabel="..."
+        breakClassName="page-item"
+        breakLinkClassName="page-link"
+        containerClassName="pagination"
+        activeClassName="active"
+        renderOnZeroPageCount={null}
+      />
+    </>
   );
-};
+}
 
+const App = () => {
+  return <PaginatedItems />;
+};
 export default App;
