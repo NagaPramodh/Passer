@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import {
   Container,
@@ -10,10 +10,12 @@ import {
   ListGroup,
   Modal,
 } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addUser, deleteUser, updateUser } from "../redux/userSlice";
 import { userData } from "../data/userData";
 import Items from "../components/items";
+
+import "../App.css";
 const UserList = ({ propCurrentItems }) => {
   const [userInput, setUserInput] = useState("");
   const [userEmail, setUserEmail] = useState("");
@@ -88,7 +90,11 @@ const UserList = ({ propCurrentItems }) => {
       <hr />
       <Row>
         <Col>
-          <Button variant="dark" className="mt-2 mb-2" onClick={handleAdd}>
+          <Button
+            variant="dark"
+            className="mt-2 mb-4 add-user"
+            onClick={handleAdd}
+          >
             Add User
           </Button>
           <Modal show={addModal} onHide={() => showAddModal(false)} centered>

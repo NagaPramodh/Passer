@@ -24,3 +24,8 @@
   flex-direction: row;
   justify-content: center;
 }
+
+/* userList Page  */
+.add-user {
+  font-size: larger;
+}
