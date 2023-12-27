@@ -115,30 +115,39 @@ const UserList = ({ propCurrentItems }) => {
             <Modal.Body>
               <InputGroup className="mb-2">
                 <div style={{ display: "flex", flexDirection: "column" }}>
-                  <FormControl
-                    placeholder="add item . . . "
-                    size="lg"
-                    value={userInput}
-                    onChange={(e) => updateInput(e.target.value)}
-                    aria-label="add something"
-                    aria-describedby="basic-addon2"
-                  />
-                  <FormControl
-                    placeholder="add Email . . . "
-                    size="lg"
-                    value={userEmail}
-                    onChange={handleEmailChange}
-                    aria-label="add something"
-                    aria-describedby="basic-addon2"
-                  />
-                  <FormControl
-                    placeholder="add Role . . . "
-                    size="lg"
-                    value={userRole}
-                    onChange={(e) => setUserRole(e.target.value)}
-                    aria-label="add something"
-                    aria-describedby="basic-addon2"
-                  />
+                  <div>
+                    <div className="label-create-item">Enter your Name</div>
+                    <FormControl
+                      placeholder="add item . . . "
+                      size="lg"
+                      value={userInput}
+                      onChange={(e) => updateInput(e.target.value)}
+                      aria-label="add something"
+                      aria-describedby="basic-addon2"
+                    />
+                  </div>
+                  <div>
+                    <div className="label-create-item">Enter your Email</div>
+                    <FormControl
+                      placeholder="add Email . . . "
+                      size="lg"
+                      value={userEmail}
+                      onChange={handleEmailChange}
+                      aria-label="add something"
+                      aria-describedby="basic-addon2"
+                    />
+                  </div>
+                  <div>
+                    <div className="label-create-item">Enter your Role</div>
+                    <FormControl
+                      placeholder="add Role . . . "
+                      size="lg"
+                      value={userRole}
+                      onChange={(e) => setUserRole(e.target.value)}
+                      aria-label="add something"
+                      aria-describedby="basic-addon2"
+                    />
+                  </div>
                 </div>
                 {!isValidEmail && (
                   <p style={{ color: "red" }}>
