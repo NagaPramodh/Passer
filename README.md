@@ -10,4 +10,6 @@ Boostrap used for styling
 
 State management was done using Redux toolkit 
 
+Regex was used for Validation
+
 Live Link: https://passer-assignment-naga-pramodh.netlify.app/
